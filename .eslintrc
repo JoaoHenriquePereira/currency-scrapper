@@ -1,0 +1,8 @@
+extends: 'eslint-config-seegno'
+
+rules:
+  arrow-parens: 0
+  complexity: 0
+  generator-star-spacing: 0
+  id-length: 0
+  no-loop-func: 0

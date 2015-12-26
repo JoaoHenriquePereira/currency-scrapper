@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+const Promise = require('bluebird');
+const assert = require('assert');
+const chalk = require('chalk');
+const co = require('co');
+const command = require('../../dist/commands/scrap-currency-pair-command');
+const confirm = require('co-prompt').confirm;
+const fs = require('fs');
+const program = require('commander');
+
+/**
+ * Promisify writer.
+ */
+
+Promise.promisifyAll(fs);
+
+program
+  .description('Generate Period pip analysis')
+  .usage('<file> <pair>', 'the file to populate, the currency pair - EURUSD for example')
+  .option('-f, --force', 'Forces the action to be done.')
+  .parse(process.argv);
+
+co(function *() {
+  if (program.args.length === 0) {
+    return program.help();
+  }
+
+  const file = program.args[0];
+  const from = program.args[1];
+  const to = program.args[2];
+
+  assert(file !== undefined, 'file must be specified inside `data` folder');
+  assert(from !== undefined && from.match(/[A-Z]{3}/), 'currency must be valid');
+  assert(to !== undefined && from.match(/[A-Z]{3}/), 'currency must be valid');
+
+  let ok = program.force;
+
+  if (!ok) {
+    ok = yield confirm(`Scrap ${from}${to} pair [y, n]?`);
+  }
+
+  if (!ok) {
+    return false;
+  }
+
+  const result = yield command.run({ file, pair: [from, to] });
+
+  console.log(result);
+
+  return true;
+}).then((value) => {
+  if (value === false) {
+    console.log(chalk.green('ok!'), 'not doing anything then.');
+
+    return process.exit();
+  }
+
+  console.log(chalk.green('done!'), 'bye');
+
+  return process.exit();
+}).catch((e) => {
+  console.error(chalk.red('error:'), e.stack);
+
+  return process.exit();
+});
