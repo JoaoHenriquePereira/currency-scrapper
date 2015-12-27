@@ -29,13 +29,9 @@ async function getPair(pair) {
  */
 
 export async function run(options) {
-  validate(options, {
-    file: new Assert().Required(),
-    pair: [new Assert().Required(), new Assert().Count(2)]
-  });
+  validate(options, { pair: [new Assert().Required(), new Assert().Count(2)] });
 
-  const { file, pair } = options;
-  const tick = await getPair(pair);
+  const { pair } = options;
 
-  return tick;
+  return await getPair(pair);
 }

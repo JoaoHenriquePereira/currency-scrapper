@@ -23,7 +23,7 @@ Promise.promisifyAll(fs);
 
 program
   .description('Generate Period pip analysis')
-  .usage('<file> <pair>', 'the file to populate, the currency pair - EURUSD for example')
+  .usage('<file> <from> <to>', 'the file to populate, the currency pair - EUR USD for example')
   .option('-f, --force', 'Forces the action to be done.')
   .parse(process.argv);
 
@@ -50,7 +50,7 @@ co(function *() {
     return false;
   }
 
-  const result = yield command.run({ file, pair: [from, to] });
+  const result = yield command.run({ pair: [from, to] });
 
   console.log(result);
 

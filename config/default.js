@@ -8,7 +8,14 @@ module.exports = {
   delay: {
     ddos: Math.floor(Math.random() * (1000 - 500) + 500)
   },
-  output: {
-    folder: 'data'
+  scrapper: {
+    output: {
+      folder: 'data'
+    },
+    pair: ['EUR', 'USD'],
+    period: {
+      unit: 'seconds',
+      value: 10
+    }
   }
 }

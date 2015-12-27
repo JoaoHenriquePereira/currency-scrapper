@@ -14,20 +14,9 @@ import should from 'should';
 
 describe('ScrapCurrencyPairCommand', () => {
   describe('run()', () => {
-    it('should fail if `file` is undefined', async function() {
-      try {
-        await command.run();
-
-        should.fail();
-      } catch (e) {
-        e.should.be.instanceOf(ValidationFailedError);
-        e.file.show().assert.should.equal('HaveProperty');
-      }
-    });
-
     it('should fail if `pair` is undefined', async function() {
       try {
-        await command.run({ file: 'foo' });
+        await command.run({ });
 
         should.fail();
       } catch (e) {
@@ -38,7 +27,7 @@ describe('ScrapCurrencyPairCommand', () => {
 
     it('should fail if `pair` is invalid', async function() {
       try {
-        await command.run({ file: 'foo', pair: 'bar' });
+        await command.run({ pair: 'bar' });
 
         should.fail();
       } catch (e) {
@@ -49,7 +38,7 @@ describe('ScrapCurrencyPairCommand', () => {
 
     it('should return undefined values if it was unable to resolve the desired pair', async function() {
       const pair = ['FOO', 'BAR'];
-      const tick = await command.run({ file: 'foo', pair });
+      const tick = await command.run({ pair });
       const key = _.keys(tick)[0];
       const value = _.values(tick)[0];
 
@@ -61,7 +50,7 @@ describe('ScrapCurrencyPairCommand', () => {
 
     it('should return the currency pair tick', async function() {
       const pair = ['USD', 'EUR'];
-      const tick = await command.run({ file: 'foo', pair });
+      const tick = await command.run({ pair });
       const key = _.keys(tick)[0];
       const value = _.values(tick)[0];
 
